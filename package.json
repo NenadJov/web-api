@@ -1,0 +1,26 @@
+{
+  "name": "web-api",
+  "version": "1.0.0",
+  "description": "web api",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NenadJov/web-api.git"
+  },
+  "author": "nenadjov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NenadJov/web-api/issues"
+  },
+  "homepage": "https://github.com/NenadJov/web-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
