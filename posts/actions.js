@@ -40,7 +40,7 @@ getAllPosts = async (req, res) => {
 };
 
 getSpecificPostQuery = (postId) => {
-    const query = 'SELECT * FROM posts WHERE Id = ?';
+    const query = 'SELECT * FROM posts WHERE Id = ?'; //treba da se smeni kverito!!!
     return new Promise((resolve, reject) => {
         connection.query(query, [postId], (error, results, fields) =>{
             if (error) {
@@ -63,7 +63,7 @@ getSpecificPost = async (req, res, next) => {
 };
 
 createPostQuery = (text, likes, userId) => {
-    const query = 'INSERT INTO posts (Text, Likes, CreatedOn, UserId) VALUES(?, ?, now(), ?';
+    const query = 'INSERT INTO posts (Text, Likes, CreatedOn, UserId) VALUES(?, ?, now(), ?';  //treba da se smeni kverito!!!
     return new Promise((resolve, reject) => {
         connection.query(query, [text, likes, userId], (error, results, fields) => {
             if (error) {
