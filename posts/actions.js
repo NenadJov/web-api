@@ -1,4 +1,5 @@
 const connection = require('../database');
+const { User, Post } = require('../models');
 
 getAllPostsQuery = (user) => {
     const query = 'SELECT * FROM user JOIN posts ON user.Id = posts.UserId WHERE user.Id = ?';
@@ -54,6 +55,11 @@ getSpecificPostQuery = (postId) => {
 
 getSpecificPost = async (req, res, next) => {
     const postId = req.params.id;
+    if(postId <= 0) {
+        var error = new Error("id can not br less than 1");
+        error.status = 401;
+        return next(error);
+    }
     try {
         const post = await getSpecificPostQuery(postId);
         res.status(200).send(post[0]);
@@ -80,6 +86,7 @@ createPost = async (req, res, next) => {
     const postLikes = req.body.likes;
     const postUserId = req.body.userId;
     try {
+        const post = await createPostQuery(postText, postLikes, postUserId);
         res.status(200).send("post is created with id" + post.insertId);
     } catch (error) {
         res.status(500).send(error.message);
@@ -110,9 +117,39 @@ updatePost = async (req, res, next) => {
     }
 };
 
+getPostsForUserQuery = (userId) => {
+    const query = 'SELECT u.Name, u.Surname, u.Email, u.Age, p.Text, p.Likes, p.CreatedOn FROM user as u JOIN posts as p ON u.Id = p.UserId WHERE u.Id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [userId], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+getPostsForUser = async (req, res, next) => {
+    const userId = req.params.userId;
+    try {
+        const result = await getPostsForUserQuery(userId);
+        const dbUser = result[0];
+        let user = new User(dbUser.Name, dbUser.Surname, dbUser.Email, dbUser.Age, dbUser.isActive, []);
+        let posts = result.map( x => {
+            return new Post(x.Text, x.Likes, x.CreatedOn);
+        });
+        user.posts = posts;
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 module.exports = {
     getAllPosts,
     getSpecificPost,
     createPost,
-    updatePost
+    updatePost,
+    getPostsForUser
 }
