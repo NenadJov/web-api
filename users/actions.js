@@ -184,7 +184,7 @@ module.exports = {
     getSpecificUser,
     createUser,
     changeUser,
-    changePartUser,
+    // changePartUser,
     deleteUser,
     loginUser
 }
